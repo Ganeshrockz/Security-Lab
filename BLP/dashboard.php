@@ -10,6 +10,7 @@ if(!mysqli_select_db($con ,"blp"))
 echo "Not Connected to DB";
 }
 $fileRead=0;
+$fileWrite=0;
 if( isset( $_POST['sub']) )
 {
 $fname= $_POST['fname'];
@@ -50,6 +51,22 @@ fclose($myfile);
 $fileRead=1;
 }
 }
+else
+{
+if($fileAccessLevel < $userAccessLevel)
+{
+echo "<script> alert('User cannot write the file')</script>";
+}
+else
+{
+//File write code
+$fileContents = $_POST['fileContent'];
+$fileName = "files/".$fname;
+$query = "bash sample.bash".$fileName;
+$queryReturnValue = shell_exec($query);
+$fileWrite=1;
+}
+}
 }
 ?>
 
@@ -67,19 +84,29 @@ $fileRead=1;
 </ol>
 <form method="post" action="#">
 <label>Enter File Name</label>
-<input type="text" name="fname" id="fname">
+<input type="text" name="fname" id="fname" required>
 <br>
 <label>Enter Mode(r or w)</label>
-<input type="text" name="mode" id="mode">
+<input type="text" name="mode" id="mode" required>
+<br>
+<label> Enter text to be written(w mode)</label>
+<textarea name="fileContent" id="fileContent" rows="4" cols="50">
+</textarea>
 <br>
 <button name="sub">Access</button>
 </form>
+<br>
+<a href="http://localhost/BLP/index.php">Logout</a>
 <?php
 if($fileRead == 1)
 {
 echo "<h1>FileContents</h1>";
 echo "<br>";
 echo $fileContents;
+}
+else if($fileWrite == 1)
+{
+echo "<h1>File Successfully Written</h1>";
 }
 ?>
 </body>
