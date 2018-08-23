@@ -62,7 +62,7 @@ else
 //File write code
 $fileContents = $_POST['fileContent'];
 $fileName = "files/".$fname;
-$query = "bash sample.bash".$fileName;
+$query = "bash sample.bash".$fileName." ".$fileContents;
 $queryReturnValue = shell_exec($query);
 $fileWrite=1;
 }
